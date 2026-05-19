@@ -1,0 +1,87 @@
+package com.innowise.userservice.controller;
+
+import com.innowise.userservice.model.dto.UserCreateRequest;
+import com.innowise.userservice.model.dto.UserDto;
+import com.innowise.userservice.service.UserService;
+import jakarta.validation.Valid;
+import java.util.UUID;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/api/v1/users")
+@RequiredArgsConstructor
+public class UserController {
+
+  private final UserService userService;
+
+  @PostMapping("/create")
+  public ResponseEntity<UserDto> createUser(@Valid @RequestBody UserCreateRequest request) {
+    UserDto savedUserDto =
+        userService.createUser(
+            UserDto.builder()
+                .id(request.getId())
+                .name(request.getName())
+                .surname(request.getSurname())
+                .birthDate(request.getBirthDate())
+                .email(request.getEmail())
+                .active(true)
+                .build());
+    return ResponseEntity.status(HttpStatus.CREATED).body(savedUserDto);
+  }
+
+  @GetMapping("/{id}")
+  public ResponseEntity<UserDto> getUserById(@PathVariable UUID id) {
+    UserDto user = userService.getUserById(id);
+    return ResponseEntity.ok(user);
+  }
+
+  @GetMapping
+  public ResponseEntity<Page<UserDto>> getAllUsers(
+      @RequestParam(required = false) String name,
+      @RequestParam(required = false) String surname,
+      Pageable pageable) {
+    Page<UserDto> users = userService.getAllUsers(name, surname, pageable);
+    return ResponseEntity.ok(users);
+  }
+
+  @PutMapping("/{id}")
+  public ResponseEntity<UserDto> updateUser(
+      @PathVariable UUID id, @Valid @RequestBody UserDto userDto) {
+    userDto.setId(id);
+    userDto.setActive(true);
+    UserDto updatedUserDto = userService.updateUserById(id, userDto);
+    return ResponseEntity.ok(updatedUserDto);
+  }
+
+  @PatchMapping("/activate/{id}")
+  public ResponseEntity<UserDto> activateUser(@PathVariable UUID id) {
+    userService.activateUser(id);
+    return ResponseEntity.noContent().build();
+  }
+
+  @PatchMapping("/deactivate/{id}")
+  public ResponseEntity<UserDto> deactivateUser(@PathVariable UUID id) {
+    userService.deactivateUser(id);
+    return ResponseEntity.noContent().build();
+  }
+
+  @DeleteMapping("/{id}")
+  public ResponseEntity<UserDto> deleteUser(@PathVariable UUID id) {
+    userService.deleteUserById(id);
+    return ResponseEntity.noContent().build();
+  }
+}

@@ -1,0 +1,68 @@
+databaseChangeLog:
+  - changeSet:
+      id: v1-create-users-table
+      author: daniilradkovich
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: "users"
+      changes:
+        - createTable:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: TEXT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: surname
+                  type: TEXT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: email
+                  type: TEXT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: birth_date
+                  type: date
+              - column:
+                  name: active
+                  type: boolean
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: TIMESTAMPTZ
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: TIMESTAMPTZ
+                  defaultValueComputed: CURRENT_TIMESTAMP
+
+        - createIndex:
+            indexName: idx_users_email
+            tableName: users
+            unique: true
+            columns:
+              - column:
+                  name: email
+
+        - createIndex:
+            indexName: idx_users_active
+            tableName: users
+            unique: false
+            columns:
+              - column:
+                  name: active
