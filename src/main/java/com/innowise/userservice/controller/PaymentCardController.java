@@ -88,7 +88,7 @@ public class PaymentCardController {
 
   @DeleteMapping("/{cardId}")
   public ResponseEntity<PaymentCardDto> deleteCard(@PathVariable UUID cardId) {
-    paymentCardService.deleCardById(cardId);
+    paymentCardService.deleteCardById(cardId);
     return ResponseEntity.noContent().build();
   }
 }

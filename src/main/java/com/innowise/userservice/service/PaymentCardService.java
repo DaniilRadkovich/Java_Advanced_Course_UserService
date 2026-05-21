@@ -22,5 +22,5 @@ public interface PaymentCardService {
 
   void deactivateCard(UUID cardId);
 
-  void deleCardById(UUID cardId);
+  void deleteCardById(UUID cardId);
 }

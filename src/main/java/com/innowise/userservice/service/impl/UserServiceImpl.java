@@ -10,6 +10,9 @@ import com.innowise.userservice.service.UserService;
 import com.innowise.userservice.specification.UserSpecification;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -26,6 +29,8 @@ public class UserServiceImpl implements UserService {
   private final UserMapper userMapper;
 
   @Override
+  @CacheEvict(value = "userCache", key = "#result.id")
+  @Transactional
   public UserDto createUser(UserDto userDto) {
     if (userRepository.findByEmail(userDto.getEmail()).isPresent()) {
       throw new EntityValidationException(
@@ -39,6 +44,8 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
+  @Cacheable(value = "userCache", key = "#id")
+  @Transactional(readOnly = true)
   public UserDto getUserById(UUID id) {
     User user = userRepository.findById(id).orElseThrow(EntityNotFoundException::new);
     return userMapper.toDto(user);
@@ -54,6 +61,7 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
+  @CachePut(value = "userCache", key = "#userId")
   @Transactional
   public UserDto updateUserById(UUID userId, UserDto userDto) {
     User user =
@@ -62,10 +70,12 @@ public class UserServiceImpl implements UserService {
             .orElseThrow(() -> new EntityNotFoundException(USER_NOT_FOUND + userDto.getId()));
 
     userMapper.updateEntityFromDto(userDto, user);
-    return userMapper.toDto(user);
+    User updateduser = userRepository.saveAndFlush(user);
+    return userMapper.toDto(updateduser);
   }
 
   @Override
+  @CacheEvict(value = "userCache", key = "#userId")
   @Transactional
   public void activateUser(UUID userId) {
     User user =
@@ -74,10 +84,11 @@ public class UserServiceImpl implements UserService {
             .orElseThrow(() -> new EntityNotFoundException(USER_NOT_FOUND + userId));
 
     user.setActive(true);
-    userRepository.save(user);
+    userRepository.saveAndFlush(user);
   }
 
   @Override
+  @CacheEvict(value = "userCache", key = "#userId")
   @Transactional
   public void deactivateUser(UUID userId) {
     User user =
@@ -90,6 +101,7 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
+  @Transactional(readOnly = true)
   public int getActiveCardCount(UUID userId) {
     if (!userRepository.existsById(userId)) {
       throw new EntityNotFoundException(USER_NOT_FOUND + userId);
@@ -98,6 +110,8 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
+  @CacheEvict(value = "userCache", key = "#userId")
+  @Transactional
   public void deleteUserById(UUID userId) {
     if (!userRepository.existsById(userId)) {
       throw new EntityNotFoundException(USER_NOT_FOUND + userId);
