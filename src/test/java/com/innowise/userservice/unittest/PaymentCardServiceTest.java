@@ -9,9 +9,11 @@ import com.innowise.userservice.model.dto.PaymentCardDto;
 import com.innowise.userservice.model.entity.PaymentCard;
 import com.innowise.userservice.model.entity.User;
 import com.innowise.userservice.repository.PaymentCardRepository;
+import com.innowise.userservice.repository.UserRepository;
 import com.innowise.userservice.service.UserService;
 import com.innowise.userservice.service.impl.PaymentCardServiceImpl;
 import java.time.LocalDate;
+import java.time.Month;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -42,6 +44,7 @@ class PaymentCardServiceTest {
   @Mock private PaymentCardRepository paymentCardRepository;
   @Mock private PaymentCardMapper paymentCardMapper;
   @Mock private UserService userService;
+  @Mock private UserRepository userRepository;
   @Mock private UserMapper userMapper;
   @Mock private CacheManager cacheManager;
   @Mock private Cache cache;
@@ -62,7 +65,7 @@ class PaymentCardServiceTest {
             .id(USER_ID)
             .name("test")
             .surname("test")
-            .birthDate(LocalDate.of(2000, 2, 22))
+            .birthDate(LocalDate.of(2000, Month.FEBRUARY, 22))
             .email("test@mail.com")
             .active(true)
             .build();
@@ -86,25 +89,24 @@ class PaymentCardServiceTest {
 
   @Test
   void should_success_createCard() {
-    when(userService.getActiveCardCount(USER_ID)).thenReturn(4);
+    when(userService.getCardCount(USER_ID)).thenReturn(4);
     when(paymentCardRepository.findByNumber(paymentCardDto.getNumber()))
         .thenReturn(Optional.empty());
-    when(userService.getUserById(USER_ID)).thenReturn(null);
-    when(userMapper.toEntity(any())).thenReturn(user);
+    when(userRepository.findById(USER_ID)).thenReturn(Optional.of(user));
     when(paymentCardMapper.toEntity(paymentCardDto)).thenReturn(paymentCard);
-    when(paymentCardRepository.saveAndFlush(paymentCard)).thenReturn(paymentCard);
+    when(paymentCardRepository.save(paymentCard)).thenReturn(paymentCard);
     when(paymentCardMapper.toDto(paymentCard)).thenReturn(paymentCardDto);
 
     PaymentCardDto result = paymentCardService.createCard(USER_ID, paymentCardDto);
 
     assertThat(result).isNotNull();
     assertThat(paymentCard.isActive()).isTrue();
-    verify(paymentCardRepository).saveAndFlush(paymentCard);
+    verify(paymentCardRepository).save(paymentCard);
   }
 
   @Test
   void should_throwCardLimitException_createCard() {
-    when(userService.getActiveCardCount(USER_ID)).thenReturn(5);
+    when(userService.getCardCount(USER_ID)).thenReturn(5);
 
     assertThatThrownBy(() -> paymentCardService.createCard(USER_ID, paymentCardDto))
         .isInstanceOf(CardLimitException.class);
@@ -113,7 +115,7 @@ class PaymentCardServiceTest {
 
   @Test
   void should_throwEntityValidationException_createCard() {
-    when(userService.getActiveCardCount(USER_ID)).thenReturn(3);
+    when(userService.getCardCount(USER_ID)).thenReturn(3);
     when(paymentCardRepository.findByNumber(paymentCardDto.getNumber()))
         .thenReturn(Optional.of(paymentCard));
 
@@ -150,7 +152,8 @@ class PaymentCardServiceTest {
         .thenReturn(page);
     when(paymentCardMapper.toDto(paymentCard)).thenReturn(paymentCardDto);
 
-    Page<PaymentCardDto> result = paymentCardService.getAllCards("Nick Nack", pageable);
+    Page<PaymentCardDto> result =
+        paymentCardService.getAllCards("Nick Nack", "test", "test", pageable);
 
     assertThat(result).isNotEmpty();
     assertThat(result.getContent().getFirst()).isEqualTo(paymentCardDto);
@@ -170,8 +173,8 @@ class PaymentCardServiceTest {
   @Test
   void should_success_updateCardByCardId() {
     when(paymentCardRepository.findById(CARD_ID)).thenReturn(Optional.of(paymentCard));
-    when(paymentCardRepository.saveAndFlush(paymentCard)).thenReturn(paymentCard);
-    when(paymentCardMapper.toDto(paymentCard)).thenReturn(paymentCardDto);
+    when(paymentCardRepository.save(any(PaymentCard.class))).thenReturn(paymentCard);
+    when(paymentCardMapper.toDto(any(PaymentCard.class))).thenReturn(paymentCardDto);
 
     PaymentCardDto result = paymentCardService.updateCardByCardId(CARD_ID, paymentCardDto);
 

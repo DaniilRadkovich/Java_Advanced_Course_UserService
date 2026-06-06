@@ -29,12 +29,12 @@ public class UserServiceImpl implements UserService {
   private final UserMapper userMapper;
 
   @Override
-  @CacheEvict(value = "userCache", key = "#result.id")
+  @CachePut(value = "userCache", key = "#result.id")
   @Transactional
   public UserDto createUser(UserDto userDto) {
     if (userRepository.findByEmail(userDto.getEmail()).isPresent()) {
       throw new EntityValidationException(
-          "User with email: " + userDto.getEmail() + " is already exist!");
+          "User with email: " + userDto.getEmail() + " is already exists!");
     }
 
     User user = userMapper.toEntity(userDto);
@@ -67,7 +67,7 @@ public class UserServiceImpl implements UserService {
     User user =
         userRepository
             .findById(userId)
-            .orElseThrow(() -> new EntityNotFoundException(USER_NOT_FOUND + userDto.getId()));
+            .orElseThrow(() -> new EntityNotFoundException(USER_NOT_FOUND + userId));
 
     userMapper.updateEntityFromDto(userDto, user);
     User updateduser = userRepository.saveAndFlush(user);
@@ -102,11 +102,11 @@ public class UserServiceImpl implements UserService {
 
   @Override
   @Transactional(readOnly = true)
-  public int getActiveCardCount(UUID userId) {
+  public int getCardCount(UUID userId) {
     if (!userRepository.existsById(userId)) {
       throw new EntityNotFoundException(USER_NOT_FOUND + userId);
     }
-    return userRepository.getActiveCardCount(userId);
+    return userRepository.getCardCount(userId);
   }
 
   @Override

@@ -1,15 +1,16 @@
 spring:
+  application:
+    name: userservice
 
   datasource:
     url: ${SPRING_DATASOURCE_URL}
     username: ${SPRING_DATASOURCE_USERNAME}
     password: ${SPRING_DATASOURCE_PASSWORD}
 
-  jpa:
-    hibernate:
-      ddl-auto: update
-
   data:
     redis:
       host: ${REDIS_HOST}
       port: ${REDIS_PORT}
+
+jwt:
+  secret-key: ${JWT_SECRET}

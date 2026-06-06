@@ -17,6 +17,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -45,6 +46,7 @@ class UserIntegrationTest extends BaseIntegrationTest {
   }
 
   @Test
+  @WithMockUser(roles = "ADMIN")
   void should_success_createUser() throws Exception {
     UserCreateRequest request =
         UserCreateRequest.builder()
@@ -57,7 +59,7 @@ class UserIntegrationTest extends BaseIntegrationTest {
     String response =
         mockMvc
             .perform(
-                post("/api/v1/users/create")
+                post("/api/v1/users")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isCreated())
@@ -83,6 +85,7 @@ class UserIntegrationTest extends BaseIntegrationTest {
   }
 
   @Test
+  @WithMockUser(roles = "ADMIN")
   void should_success_getUserById() throws Exception {
     User user =
         User.builder()
@@ -112,6 +115,7 @@ class UserIntegrationTest extends BaseIntegrationTest {
   }
 
   @Test
+  @WithMockUser(roles = "ADMIN")
   void should_success_getAllUsers() throws Exception {
     User user1 =
         User.builder()
@@ -151,6 +155,7 @@ class UserIntegrationTest extends BaseIntegrationTest {
   }
 
   @Test
+  @WithMockUser(roles = "ADMIN")
   void should_success_updateUser() throws Exception {
     User user =
         User.builder()
@@ -187,6 +192,7 @@ class UserIntegrationTest extends BaseIntegrationTest {
   }
 
   @Test
+  @WithMockUser(roles = "ADMIN")
   void should_success_activateUser() throws Exception {
     User user =
         User.builder()
@@ -200,7 +206,7 @@ class UserIntegrationTest extends BaseIntegrationTest {
     User savedUser = userRepository.save(user);
     UUID id = savedUser.getId();
 
-    mockMvc.perform(patch("/api/v1/users/activate/{id}", id)).andExpect(status().isNoContent());
+    mockMvc.perform(patch("/api/v1/users/{id}/activation", id)).andExpect(status().isNoContent());
 
     User activatedUser = userRepository.findById(id).orElseThrow();
 
@@ -208,6 +214,7 @@ class UserIntegrationTest extends BaseIntegrationTest {
   }
 
   @Test
+  @WithMockUser(roles = "ADMIN")
   void should_success_deactivateUser() throws Exception {
     User user =
         User.builder()
@@ -221,7 +228,7 @@ class UserIntegrationTest extends BaseIntegrationTest {
     User savedUser = userRepository.save(user);
     UUID id = savedUser.getId();
 
-    mockMvc.perform(patch("/api/v1/users/deactivate/{id}", id)).andExpect(status().isNoContent());
+    mockMvc.perform(patch("/api/v1/users/{id}/deactivation", id)).andExpect(status().isNoContent());
 
     User deactivatedUser = userRepository.findById(id).orElseThrow();
 
@@ -229,6 +236,7 @@ class UserIntegrationTest extends BaseIntegrationTest {
   }
 
   @Test
+  @WithMockUser(roles = "ADMIN")
   void should_success_deleteUser() throws Exception {
     User user =
         User.builder()

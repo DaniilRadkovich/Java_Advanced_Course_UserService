@@ -4,11 +4,11 @@ import com.innowise.userservice.exception.CardLimitException;
 import com.innowise.userservice.exception.EntityNotFoundException;
 import com.innowise.userservice.exception.EntityValidationException;
 import com.innowise.userservice.mapper.PaymentCardMapper;
-import com.innowise.userservice.mapper.UserMapper;
 import com.innowise.userservice.model.dto.PaymentCardDto;
 import com.innowise.userservice.model.entity.PaymentCard;
 import com.innowise.userservice.model.entity.User;
 import com.innowise.userservice.repository.PaymentCardRepository;
+import com.innowise.userservice.repository.UserRepository;
 import com.innowise.userservice.service.PaymentCardService;
 import com.innowise.userservice.service.UserService;
 import com.innowise.userservice.specification.PaymentCardSpecification;
@@ -36,25 +36,28 @@ public class PaymentCardServiceImpl implements PaymentCardService {
   private final PaymentCardRepository paymentCardRepository;
   private final PaymentCardMapper paymentCardMapper;
   private final UserService userService;
-  private final UserMapper userMapper;
+  private final UserRepository userRepository;
   private final CacheManager cacheManager;
 
   @Override
-  @CacheEvict(value = "userCache", key = "#userId")
+  @CacheEvict(value = "cardCache", key = "#userId")
   @Transactional
   public PaymentCardDto createCard(UUID userId, PaymentCardDto paymentCardDto) {
-    if (userService.getActiveCardCount(userId) >= 5) {
+    if (userService.getCardCount(userId) >= 5) {
       throw new CardLimitException();
     }
     if (paymentCardRepository.findByNumber(paymentCardDto.getNumber()).isPresent()) {
       throw new EntityValidationException("Card with this number already exists!");
     }
-    User user = userMapper.toEntity(userService.getUserById(userId));
+    User user =
+        userRepository
+            .findById(userId)
+            .orElseThrow(() -> new EntityNotFoundException("User not found! id: " + userId));
+
     PaymentCard paymentCard = paymentCardMapper.toEntity(paymentCardDto);
     paymentCard.setUser(user);
     paymentCard.setActive(true);
-    PaymentCard savedPaymentCard = paymentCardRepository.saveAndFlush(paymentCard);
-
+    PaymentCard savedPaymentCard = paymentCardRepository.save(paymentCard);
     return paymentCardMapper.toDto(savedPaymentCard);
   }
 
@@ -69,9 +72,13 @@ public class PaymentCardServiceImpl implements PaymentCardService {
 
   @Override
   @Transactional(readOnly = true)
-  public Page<PaymentCardDto> getAllCards(String holder, Pageable pageable) {
+  public Page<PaymentCardDto> getAllCards(
+      String holder, String name, String surname, Pageable pageable) {
     Specification<PaymentCard> specification =
-        Specification.allOf(PaymentCardSpecification.hasHolder(holder));
+        Specification.allOf(
+            PaymentCardSpecification.hasHolder(holder),
+            PaymentCardSpecification.hasFirstName(name),
+            PaymentCardSpecification.hasLastName(surname));
 
     Page<PaymentCard> paymentCards = paymentCardRepository.findAll(specification, pageable);
     return paymentCards.map(paymentCardMapper::toDto);
@@ -95,12 +102,8 @@ public class PaymentCardServiceImpl implements PaymentCardService {
     PaymentCard paymentCard =
         paymentCardRepository.findById(cardId).orElseThrow(EntityNotFoundException::new);
 
-    paymentCard.setNumber(paymentCardDto.getNumber());
-    paymentCard.setHolder(paymentCardDto.getHolder());
-    paymentCard.setExpirationDate(paymentCardDto.getExpirationDate());
-
     paymentCardMapper.updateEntityFromDto(paymentCardDto, paymentCard);
-    PaymentCard updatedCard = paymentCardRepository.saveAndFlush(paymentCard);
+    PaymentCard updatedCard = paymentCardRepository.save(paymentCard);
     return paymentCardMapper.toDto(updatedCard);
   }
 

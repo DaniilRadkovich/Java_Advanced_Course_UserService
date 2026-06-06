@@ -12,7 +12,7 @@ public interface PaymentCardService {
 
   PaymentCardDto getCardByCardId(UUID cardId);
 
-  Page<PaymentCardDto> getAllCards(String holder, Pageable pageable);
+  Page<PaymentCardDto> getAllCards(String holder, String name, String surname, Pageable pageable);
 
   List<PaymentCardDto> getCardsByUserId(UUID userId);
 

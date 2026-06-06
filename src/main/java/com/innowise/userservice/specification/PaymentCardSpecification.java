@@ -11,4 +11,14 @@ public class PaymentCardSpecification {
     return ((root, query, criteriaBuilder) ->
         holder == null ? null : criteriaBuilder.equal(root.get("holder"), holder));
   }
+
+  public static Specification<PaymentCard> hasFirstName(String name) {
+    return ((root, query, criteriaBuilder) ->
+        name == null ? null : criteriaBuilder.equal(root.get("user").get("name"), name));
+  }
+
+  public static Specification<PaymentCard> hasLastName(String surname) {
+    return ((root, query, criteriaBuilder) ->
+        surname == null ? null : criteriaBuilder.equal(root.get("user").get("surname"), surname));
+  }
 }

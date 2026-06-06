@@ -49,6 +49,7 @@ public class User extends BaseEntity {
   @Column(nullable = false)
   private boolean active;
 
+  @Builder.Default
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<PaymentCard> paymentCards = new ArrayList<>();
 }

@@ -9,8 +9,11 @@ import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import org.hibernate.NonUniqueResultException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -59,7 +62,7 @@ public class GlobalExceptionHandler {
   public ResponseEntity<ErrorResponse> handleEntityNotFoundException(
       EntityNotFoundException ex, HttpServletRequest request) {
 
-    HttpStatus status = HttpStatus.BAD_REQUEST;
+    HttpStatus status = HttpStatus.NOT_FOUND;
 
     ErrorResponse errorResponse =
         new ErrorResponse(
@@ -126,6 +129,57 @@ public class GlobalExceptionHandler {
       NoHandlerFoundException ex, HttpServletRequest request) {
 
     HttpStatus status = HttpStatus.NOT_FOUND;
+
+    ErrorResponse errorResponse =
+        new ErrorResponse(
+            LocalDateTime.now(),
+            status.value(),
+            status.getReasonPhrase(),
+            ex.getMessage(),
+            request.getRequestURI());
+
+    return ResponseEntity.status(status).body(errorResponse);
+  }
+
+  @ExceptionHandler(DataIntegrityViolationException.class)
+  public ResponseEntity<ErrorResponse> handleDataIntegrityViolationException(
+      DataIntegrityViolationException ex, HttpServletRequest request) {
+
+    HttpStatus status = HttpStatus.CONFLICT;
+
+    ErrorResponse errorResponse =
+        new ErrorResponse(
+            LocalDateTime.now(),
+            status.value(),
+            status.getReasonPhrase(),
+            ex.getMessage(),
+            request.getRequestURI());
+
+    return ResponseEntity.status(status).body(errorResponse);
+  }
+
+  @ExceptionHandler(NonUniqueResultException.class)
+  public ResponseEntity<ErrorResponse> handleNonUniqueResultException(
+      NonUniqueResultException ex, HttpServletRequest request) {
+
+    HttpStatus status = HttpStatus.CONFLICT;
+
+    ErrorResponse errorResponse =
+        new ErrorResponse(
+            LocalDateTime.now(),
+            status.value(),
+            status.getReasonPhrase(),
+            ex.getMessage(),
+            request.getRequestURI());
+
+    return ResponseEntity.status(status).body(errorResponse);
+  }
+
+  @ExceptionHandler(AuthorizationDeniedException.class)
+  public ResponseEntity<ErrorResponse> handleAuthorizationDeniedException(
+      AuthorizationDeniedException ex, HttpServletRequest request) {
+
+    HttpStatus status = HttpStatus.FORBIDDEN;
 
     ErrorResponse errorResponse =
         new ErrorResponse(

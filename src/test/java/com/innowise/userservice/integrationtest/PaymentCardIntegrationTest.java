@@ -25,6 +25,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
@@ -61,6 +62,7 @@ class PaymentCardIntegrationTest extends BaseIntegrationTest {
   }
 
   @Test
+  @WithMockUser(roles = "ADMIN")
   void should_success_createPaymentCard() throws Exception {
     PaymentCardCreateRequest request =
         PaymentCardCreateRequest.builder()
@@ -95,6 +97,7 @@ class PaymentCardIntegrationTest extends BaseIntegrationTest {
   }
 
   @Test
+  @WithMockUser(roles = "ADMIN")
   void should_success_getCardById() throws Exception {
     PaymentCard card =
         PaymentCard.builder()
@@ -124,6 +127,7 @@ class PaymentCardIntegrationTest extends BaseIntegrationTest {
   }
 
   @Test
+  @WithMockUser(roles = "ADMIN")
   void should_success_getAllCards() throws Exception {
     PaymentCard card1 =
         PaymentCard.builder()
@@ -163,6 +167,7 @@ class PaymentCardIntegrationTest extends BaseIntegrationTest {
   }
 
   @Test
+  @WithMockUser(roles = "ADMIN")
   void should_success_getCardsByUserId() throws Exception {
     PaymentCard card1 =
         PaymentCard.builder()
@@ -199,6 +204,7 @@ class PaymentCardIntegrationTest extends BaseIntegrationTest {
   }
 
   @Test
+  @WithMockUser(roles = "ADMIN")
   void should_success_updateCard() throws Exception {
     PaymentCard card =
         PaymentCard.builder()
@@ -234,6 +240,7 @@ class PaymentCardIntegrationTest extends BaseIntegrationTest {
   }
 
   @Test
+  @WithMockUser(roles = "ADMIN")
   void should_success_activateCard() throws Exception {
     PaymentCard card =
         PaymentCard.builder()
@@ -247,7 +254,7 @@ class PaymentCardIntegrationTest extends BaseIntegrationTest {
     PaymentCard savedCard = paymentCardRepository.save(card);
 
     mockMvc
-        .perform(patch("/api/v1/cards/activate/{cardId}", savedCard.getId()))
+        .perform(patch("/api/v1/cards/{cardId}/activation", savedCard.getId()))
         .andExpect(status().isNoContent());
 
     PaymentCard activatedCard =
@@ -257,6 +264,7 @@ class PaymentCardIntegrationTest extends BaseIntegrationTest {
   }
 
   @Test
+  @WithMockUser(roles = "ADMIN")
   void should_success_deactivateCard() throws Exception {
     PaymentCard card =
         PaymentCard.builder()
@@ -270,7 +278,7 @@ class PaymentCardIntegrationTest extends BaseIntegrationTest {
     PaymentCard savedCard = paymentCardRepository.save(card);
 
     mockMvc
-        .perform(patch("/api/v1/cards/deactivate/{cardId}", savedCard.getId()))
+        .perform(patch("/api/v1/cards/{cardId}/deactivation", savedCard.getId()))
         .andExpect(status().isNoContent());
 
     PaymentCard deactivatedCard =
@@ -280,6 +288,7 @@ class PaymentCardIntegrationTest extends BaseIntegrationTest {
   }
 
   @Test
+  @WithMockUser(roles = "ADMIN")
   void should_success_deleteCard() throws Exception {
     PaymentCard card =
         PaymentCard.builder()

@@ -19,7 +19,7 @@ public interface UserService {
 
   void deactivateUser(UUID userId);
 
-  int getActiveCardCount(UUID userId);
+  int getCardCount(UUID userId);
 
   void deleteUserById(UUID userId);
 }

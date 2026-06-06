@@ -13,12 +13,11 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UserRepository extends JpaRepository<User, UUID> {
 
+  @Query("SELECT u FROM User u WHERE u.email = :email")
   Optional<User> findByEmail(String email);
 
   Page<User> findAll(Specification<User> specification, Pageable pageable);
 
-  @Query(
-      value = "SELECT COUNT(*) FROM payment_cards WHERE user_id = :userId AND active = true",
-      nativeQuery = true)
-  int getActiveCardCount(UUID userId);
+  @Query("SELECT COUNT(c) FROM PaymentCard c WHERE c.user.id = :userId")
+  int getCardCount(UUID userId);
 }

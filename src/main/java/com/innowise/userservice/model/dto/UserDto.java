@@ -1,10 +1,12 @@
 package com.innowise.userservice.model.dto;
 
+import com.innowise.userservice.model.entity.PaymentCard;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -36,4 +38,6 @@ public class UserDto {
   private String email;
 
   private boolean active;
+
+  private List<PaymentCard> paymentCards;
 }
