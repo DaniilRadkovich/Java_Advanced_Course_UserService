@@ -41,7 +41,6 @@ jobs:
             -Dsonar.organization=daniilradkovich \
             -Dsonar.host.url=https://sonarcloud.io \
             -Dsonar.token=${SONAR_TOKEN}
-            -Dsonar.coverage.jacoco.xmlReportPaths=**/target/site/jacoco/jacoco.xml
 
       - name: Docker image artifact creation
         run: docker build -t userservice:latest .
