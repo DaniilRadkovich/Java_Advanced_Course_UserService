@@ -28,7 +28,7 @@
     </sonar.projectKey>
     <sonar.organization>daniilradkovich</sonar.organization>
     <sonar.exclusions>
-      **/config/**,**/exception/**,**/model/**,**/mapper/**,**/security/**,**/repository/**
+      **/config/**,**/exception/**,**/model/**,**/mapper/**,**/security/**,**/repository/**,**/specification/**
     </sonar.exclusions>
   </properties>
 

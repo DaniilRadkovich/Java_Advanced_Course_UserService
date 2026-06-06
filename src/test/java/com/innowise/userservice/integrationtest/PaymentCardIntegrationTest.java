@@ -18,6 +18,7 @@ import com.innowise.userservice.model.entity.User;
 import com.innowise.userservice.repository.PaymentCardRepository;
 import com.innowise.userservice.repository.UserRepository;
 import java.time.LocalDate;
+import java.time.Month;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,7 +54,7 @@ class PaymentCardIntegrationTest extends BaseIntegrationTest {
         User.builder()
             .name("John")
             .surname("Wick")
-            .birthDate(LocalDate.of(1970, 6, 6))
+            .birthDate(LocalDate.of(1970, Month.JUNE, 6))
             .email("john_wick@mail.com")
             .active(true)
             .build();
@@ -68,7 +69,7 @@ class PaymentCardIntegrationTest extends BaseIntegrationTest {
         PaymentCardCreateRequest.builder()
             .number("0000444400004444")
             .holder("John Wick")
-            .expirationDate(LocalDate.of(2040, 12, 12))
+            .expirationDate(LocalDate.of(2040, Month.DECEMBER, 12))
             .build();
 
     String response =
@@ -103,7 +104,7 @@ class PaymentCardIntegrationTest extends BaseIntegrationTest {
         PaymentCard.builder()
             .number("0000444400004444")
             .holder("John Wick")
-            .expirationDate(LocalDate.of(2030, 1, 1))
+            .expirationDate(LocalDate.of(2030, Month.JANUARY, 1))
             .active(true)
             .user(savedUser)
             .build();
@@ -133,7 +134,7 @@ class PaymentCardIntegrationTest extends BaseIntegrationTest {
         PaymentCard.builder()
             .number("0000444400004444")
             .holder("John Wick")
-            .expirationDate(LocalDate.of(2030, 1, 1))
+            .expirationDate(LocalDate.of(2030, Month.JANUARY, 1))
             .active(true)
             .user(savedUser)
             .build();
@@ -142,7 +143,7 @@ class PaymentCardIntegrationTest extends BaseIntegrationTest {
         PaymentCard.builder()
             .number("0000444400004444")
             .holder("LISA CUDDY")
-            .expirationDate(LocalDate.of(2031, 1, 1))
+            .expirationDate(LocalDate.of(2031, Month.JANUARY, 1))
             .active(true)
             .user(savedUser)
             .build();
@@ -173,7 +174,7 @@ class PaymentCardIntegrationTest extends BaseIntegrationTest {
         PaymentCard.builder()
             .number("0000444400004444")
             .holder("John Wick")
-            .expirationDate(LocalDate.of(2030, 1, 1))
+            .expirationDate(LocalDate.of(2030, Month.JANUARY, 1))
             .active(true)
             .user(savedUser)
             .build();
@@ -182,7 +183,7 @@ class PaymentCardIntegrationTest extends BaseIntegrationTest {
         PaymentCard.builder()
             .number("0000444400004445")
             .holder("John Wick")
-            .expirationDate(LocalDate.of(2031, 1, 1))
+            .expirationDate(LocalDate.of(2031, Month.JANUARY, 1))
             .active(true)
             .user(savedUser)
             .build();
@@ -210,7 +211,7 @@ class PaymentCardIntegrationTest extends BaseIntegrationTest {
         PaymentCard.builder()
             .number("0000444400004444")
             .holder("OLD HOLDER")
-            .expirationDate(LocalDate.of(2030, 1, 1))
+            .expirationDate(LocalDate.of(2030, Month.JANUARY, 1))
             .active(true)
             .user(savedUser)
             .build();
@@ -221,7 +222,7 @@ class PaymentCardIntegrationTest extends BaseIntegrationTest {
         PaymentCardDto.builder()
             .number("0000444400005555")
             .holder("NEW HOLDER")
-            .expirationDate(LocalDate.of(2035, 1, 1))
+            .expirationDate(LocalDate.of(2035, Month.JANUARY, 1))
             .userId(savedUser.getId())
             .build();
 
@@ -246,7 +247,7 @@ class PaymentCardIntegrationTest extends BaseIntegrationTest {
         PaymentCard.builder()
             .number("0000444400004444")
             .holder("John Wick")
-            .expirationDate(LocalDate.of(2030, 1, 1))
+            .expirationDate(LocalDate.of(2030, Month.JANUARY, 1))
             .active(false)
             .user(savedUser)
             .build();
@@ -270,7 +271,7 @@ class PaymentCardIntegrationTest extends BaseIntegrationTest {
         PaymentCard.builder()
             .number("0000444400004444")
             .holder("John Wick")
-            .expirationDate(LocalDate.of(2030, 1, 1))
+            .expirationDate(LocalDate.of(2030, Month.JANUARY, 1))
             .active(true)
             .user(savedUser)
             .build();
@@ -294,7 +295,7 @@ class PaymentCardIntegrationTest extends BaseIntegrationTest {
         PaymentCard.builder()
             .number("0000444400004444")
             .holder("John Wick")
-            .expirationDate(LocalDate.of(2030, 1, 1))
+            .expirationDate(LocalDate.of(2030, Month.JANUARY, 1))
             .active(true)
             .user(savedUser)
             .build();

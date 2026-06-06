@@ -9,6 +9,7 @@ import com.innowise.userservice.model.dto.UserDto;
 import com.innowise.userservice.model.entity.User;
 import com.innowise.userservice.repository.UserRepository;
 import java.time.LocalDate;
+import java.time.Month;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -52,7 +53,7 @@ class UserIntegrationTest extends BaseIntegrationTest {
         UserCreateRequest.builder()
             .name("Sasha")
             .surname("Petrov")
-            .birthDate(LocalDate.of(1991, 2, 2))
+            .birthDate(LocalDate.of(1991, Month.FEBRUARY, 2))
             .email("sanchez.petrov@mail.com")
             .build();
 
@@ -79,7 +80,7 @@ class UserIntegrationTest extends BaseIntegrationTest {
     assertThat(savedUser.getId()).isNotNull();
     assertThat(savedUser.getName()).isEqualTo("Sasha");
     assertThat(savedUser.getSurname()).isEqualTo("Petrov");
-    assertThat(savedUser.getBirthDate()).isEqualTo(LocalDate.of(1991, 2, 2));
+    assertThat(savedUser.getBirthDate()).isEqualTo(LocalDate.of(1991, Month.FEBRUARY, 2));
     assertThat(savedUser.getEmail()).isEqualTo("sanchez.petrov@mail.com");
     assertThat(savedUser.isActive()).isTrue();
   }
@@ -91,7 +92,7 @@ class UserIntegrationTest extends BaseIntegrationTest {
         User.builder()
             .name("Lisa")
             .surname("Cuddy")
-            .birthDate(LocalDate.of(1980, 3, 11))
+            .birthDate(LocalDate.of(1980, Month.MARCH, 11))
             .email("lisa@mail.com")
             .active(true)
             .build();
@@ -121,7 +122,7 @@ class UserIntegrationTest extends BaseIntegrationTest {
         User.builder()
             .name("Sasha")
             .surname("Petrov")
-            .birthDate(LocalDate.of(1991, 2, 2))
+            .birthDate(LocalDate.of(1991, Month.FEBRUARY, 2))
             .email("sanchez.petrov@mail.com")
             .active(true)
             .build();
@@ -130,7 +131,7 @@ class UserIntegrationTest extends BaseIntegrationTest {
         User.builder()
             .name("Lisa")
             .surname("Cuddy")
-            .birthDate(LocalDate.of(1980, 3, 11))
+            .birthDate(LocalDate.of(1980, Month.MARCH, 11))
             .email("lisa@mail.com")
             .active(true)
             .build();
@@ -161,7 +162,7 @@ class UserIntegrationTest extends BaseIntegrationTest {
         User.builder()
             .name("oldName")
             .surname("oldSurname")
-            .birthDate(LocalDate.of(1980, 4, 4))
+            .birthDate(LocalDate.of(1980, Month.APRIL, 4))
             .email("old@mail.com")
             .active(true)
             .build();
@@ -173,7 +174,7 @@ class UserIntegrationTest extends BaseIntegrationTest {
         UserDto.builder()
             .name("newName")
             .surname("newSurname")
-            .birthDate(LocalDate.of(2000, 5, 5))
+            .birthDate(LocalDate.of(2000, Month.MAY, 5))
             .email("new@mail.com")
             .build();
 
@@ -198,7 +199,7 @@ class UserIntegrationTest extends BaseIntegrationTest {
         User.builder()
             .name("Not active")
             .surname("User")
-            .birthDate(LocalDate.of(2000, 1, 1))
+            .birthDate(LocalDate.of(2000, Month.JANUARY, 1))
             .email("test@mail.com")
             .active(false)
             .build();
@@ -220,7 +221,7 @@ class UserIntegrationTest extends BaseIntegrationTest {
         User.builder()
             .name("active")
             .surname("User")
-            .birthDate(LocalDate.of(2000, 1, 1))
+            .birthDate(LocalDate.of(2000, Month.JANUARY, 1))
             .email("test@mail.com")
             .active(true)
             .build();
@@ -242,7 +243,7 @@ class UserIntegrationTest extends BaseIntegrationTest {
         User.builder()
             .name("nameToDelete")
             .surname("surnameToDelete")
-            .birthDate(LocalDate.of(2000, 1, 1))
+            .birthDate(LocalDate.of(2000, Month.JANUARY, 1))
             .email("delete@mail.com")
             .active(true)
             .build();
