@@ -1,6 +1,12 @@
+server:
+  port: 8082
+
 spring:
   application:
     name: userservice
+
+  jpa:
+    show-sql: true
 
   datasource:
     url: ${SPRING_DATASOURCE_URL}
@@ -11,6 +17,12 @@ spring:
     redis:
       host: ${REDIS_HOST}
       port: ${REDIS_PORT}
+
+logging:
+  level:
+
+    org.hibernate.SQL: DEBUG
+    org.hibernate.orm.jdbc.bind: TRACE
 
 jwt:
   secret-key: ${JWT_SECRET}

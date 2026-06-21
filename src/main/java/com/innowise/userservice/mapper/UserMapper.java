@@ -7,8 +7,12 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
+import org.mapstruct.ReportingPolicy;
 
-@Mapper(componentModel = "spring")
+@Mapper(
+    componentModel = "spring",
+    unmappedTargetPolicy = ReportingPolicy.IGNORE,
+    uses = PaymentCardMapper.class)
 public interface UserMapper {
 
   UserDto toDto(User user);
@@ -17,6 +21,8 @@ public interface UserMapper {
   User toEntity(UserDto userDto);
 
   @Mapping(target = "paymentCards", ignore = true)
+  @Mapping(target = "createdAt", ignore = true)
+  @Mapping(target = "updatedAt", ignore = true)
   @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
   void updateEntityFromDto(UserDto userDto, @MappingTarget User user);
 }

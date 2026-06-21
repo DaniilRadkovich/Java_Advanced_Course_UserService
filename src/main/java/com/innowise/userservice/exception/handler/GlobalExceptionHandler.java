@@ -36,7 +36,8 @@ public class GlobalExceptionHandler {
             status.value(),
             status.getReasonPhrase(),
             ex.getMessage(),
-            request.getRequestURI());
+            request.getRequestURI(),
+            ex.getClass().getSimpleName());
 
     return ResponseEntity.status(status).body(errorResponse);
   }
@@ -53,7 +54,8 @@ public class GlobalExceptionHandler {
             status.value(),
             status.getReasonPhrase(),
             ex.getMessage(),
-            request.getRequestURI());
+            request.getRequestURI(),
+            ex.getClass().getSimpleName());
 
     return ResponseEntity.status(status).body(errorResponse);
   }
@@ -70,7 +72,8 @@ public class GlobalExceptionHandler {
             status.value(),
             status.getReasonPhrase(),
             ex.getMessage(),
-            request.getRequestURI());
+            request.getRequestURI(),
+            ex.getClass().getSimpleName());
 
     return ResponseEntity.status(status).body(errorResponse);
   }
@@ -119,7 +122,8 @@ public class GlobalExceptionHandler {
             status.value(),
             status.getReasonPhrase(),
             ex.getMessage(),
-            request.getRequestURI());
+            request.getRequestURI(),
+            ex.getClass().getSimpleName());
 
     return ResponseEntity.status(status).body(errorResponse);
   }
@@ -136,7 +140,8 @@ public class GlobalExceptionHandler {
             status.value(),
             status.getReasonPhrase(),
             ex.getMessage(),
-            request.getRequestURI());
+            request.getRequestURI(),
+            ex.getClass().getSimpleName());
 
     return ResponseEntity.status(status).body(errorResponse);
   }
@@ -153,7 +158,8 @@ public class GlobalExceptionHandler {
             status.value(),
             status.getReasonPhrase(),
             ex.getMessage(),
-            request.getRequestURI());
+            request.getRequestURI(),
+            ex.getClass().getSimpleName());
 
     return ResponseEntity.status(status).body(errorResponse);
   }
@@ -170,7 +176,8 @@ public class GlobalExceptionHandler {
             status.value(),
             status.getReasonPhrase(),
             ex.getMessage(),
-            request.getRequestURI());
+            request.getRequestURI(),
+            ex.getClass().getSimpleName());
 
     return ResponseEntity.status(status).body(errorResponse);
   }
@@ -187,7 +194,8 @@ public class GlobalExceptionHandler {
             status.value(),
             status.getReasonPhrase(),
             ex.getMessage(),
-            request.getRequestURI());
+            request.getRequestURI(),
+            ex.getClass().getSimpleName());
 
     return ResponseEntity.status(status).body(errorResponse);
   }

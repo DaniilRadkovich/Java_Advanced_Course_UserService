@@ -1,6 +1,7 @@
 services:
   postgres:
     image: postgres:15-alpine
+    container_name: userservice-postgres
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
@@ -18,9 +19,9 @@ services:
 
   userservice:
     build: .
-    container_name: userservice_app
+    container_name: userservice-app
     ports:
-      - "${APP_PORT}:8080"
+      - "${SERVER_PORT}:8082"
     depends_on:
       - postgres
       - redis
@@ -31,6 +32,7 @@ services:
       - SPRING_DATASOURCE_PASSWORD=${SPRING_DATASOURCE_PASSWORD}
       - SPRING_DATA_REDIS_HOST=${REDIS_HOST}
       - SPRING_DATA_REDIS_PORT=${REDIS_PORT}
+      - SERVER_PORT=${SERVER_PORT}
 
 volumes:
   postgres-data:

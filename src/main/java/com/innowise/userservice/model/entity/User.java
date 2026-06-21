@@ -1,5 +1,7 @@
 package com.innowise.userservice.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.innowise.userservice.model.dto.PaymentCardDto;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -51,5 +53,7 @@ public class User extends BaseEntity {
 
   @Builder.Default
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+  @JsonManagedReference
+  @ToString.Exclude
   private List<PaymentCard> paymentCards = new ArrayList<>();
 }

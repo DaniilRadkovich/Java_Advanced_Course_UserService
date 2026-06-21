@@ -10,6 +10,7 @@ import com.innowise.userservice.service.UserService;
 import com.innowise.userservice.specification.UserSpecification;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
@@ -19,6 +20,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
@@ -37,9 +39,14 @@ public class UserServiceImpl implements UserService {
           "User with email: " + userDto.getEmail() + " is already exists!");
     }
 
+    log.info("Saving user {}", userDto.getEmail());
+
     User user = userMapper.toEntity(userDto);
     user.setActive(true);
     User savedUser = userRepository.save(user);
+
+    log.info("Saved user {}", savedUser.getId());
+
     return userMapper.toDto(savedUser);
   }
 
@@ -52,6 +59,7 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
+  @Transactional(readOnly = true)
   public Page<UserDto> getAllUsers(String name, String surname, Pageable pageable) {
     Specification<User> specification =
         Specification.allOf(UserSpecification.hasName(name), UserSpecification.hasSurname(surname));
@@ -97,7 +105,7 @@ public class UserServiceImpl implements UserService {
             .orElseThrow(() -> new EntityNotFoundException(USER_NOT_FOUND + userId));
 
     user.setActive(false);
-    userRepository.save(user);
+    userRepository.saveAndFlush(user);
   }
 
   @Override

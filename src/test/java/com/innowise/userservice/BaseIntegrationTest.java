@@ -38,5 +38,8 @@ public abstract class BaseIntegrationTest {
     registry.add("spring.data.redis.port", () -> redis.getMappedPort(6379));
 
     registry.add("spring.jpa.hibernate.ddl-auto", () -> "validate");
+
+    registry.add("JWT_SECRET", () -> "KZSHyaAUVhrpWoTlO7DkzqozsZBt62dxRNYPm53iRzA");
+    registry.add("INTERNAL_KEY", () -> "HGVklnjnwefebHVVjjnweklBJKbwkjbBHJhjbjhbwwf");
   }
 }

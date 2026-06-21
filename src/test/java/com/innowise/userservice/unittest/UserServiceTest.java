@@ -183,13 +183,13 @@ class UserServiceTest {
   void should_success_deactivateUser() {
     user.setActive(true);
     when(userRepository.findById(USER_ID)).thenReturn(Optional.of(user));
-    when(userRepository.save(any(User.class))).thenReturn(user);
+    when(userRepository.saveAndFlush(any(User.class))).thenReturn(user);
 
     userService.deactivateUser(USER_ID);
 
     org.junit.jupiter.api.Assertions.assertFalse(user.isActive());
     verify(userRepository).findById(USER_ID);
-    verify(userRepository).save(user);
+    verify(userRepository).saveAndFlush(user);
   }
 
   @Test

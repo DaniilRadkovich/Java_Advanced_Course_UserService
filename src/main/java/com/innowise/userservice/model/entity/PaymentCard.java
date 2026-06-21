@@ -1,5 +1,6 @@
 package com.innowise.userservice.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -35,6 +36,8 @@ public class PaymentCard extends BaseEntity{
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "user_id", nullable = false)
+  @JsonBackReference
+  @ToString.Exclude
   private User user;
 
   @Column(nullable = false)

@@ -1,6 +1,5 @@
 package com.innowise.userservice.model.dto;
 
-import com.innowise.userservice.model.entity.PaymentCard;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Past;
@@ -39,5 +38,5 @@ public class UserDto {
 
   private boolean active;
 
-  private List<PaymentCard> paymentCards;
+  private List<PaymentCardDto> paymentCards;
 }
