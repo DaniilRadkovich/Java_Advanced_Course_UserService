@@ -2,7 +2,9 @@ package com.innowise.userservice.config;
 
 import com.innowise.userservice.security.InternalKeyFilter;
 import com.innowise.userservice.security.JwtAuthenticationFilter;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -30,10 +32,10 @@ public class SecurityConfig {
             auth ->
                 auth.requestMatchers("/api/v1/auth/**")
                     .permitAll()
-                    .requestMatchers(HttpMethod.POST, "/api/v1/users/internal/**")
-                    .permitAll()
+                    .requestMatchers(HttpMethod.POST, "/api/v1/users/internal")
+                    .hasRole("INTERNAL")
                     .requestMatchers(HttpMethod.DELETE, "/api/v1/users/internal/**")
-                    .permitAll()
+                    .hasRole("INTERNAL")
                     .requestMatchers("/api/v1/users/**")
                     .hasAnyRole("ADMIN", "USER")
                     .requestMatchers("/api/v1/cards/**")
@@ -44,7 +46,6 @@ public class SecurityConfig {
             session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .addFilterBefore(internalKeyFilter, UsernamePasswordAuthenticationFilter.class)
         .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
-
     return http.build();
   }
 }

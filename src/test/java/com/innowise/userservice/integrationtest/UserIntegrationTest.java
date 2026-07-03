@@ -28,10 +28,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @Testcontainers
-@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
+@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT, properties = "INTERNAL_KEY=HGVklnjnwefebHVVjjnweklBJKbwkjbBHJhjbjhbwwf")
 @AutoConfigureMockMvc
 class UserIntegrationTest extends BaseIntegrationTest {
 
@@ -243,7 +244,6 @@ class UserIntegrationTest extends BaseIntegrationTest {
   }
 
   @Test
-  @WithMockUser(roles = "ADMIN")
   void should_success_createUserInternal() throws Exception {
     UserCreateRequest request = UserCreateRequest.builder()
         .name("Sasha")
@@ -256,6 +256,7 @@ class UserIntegrationTest extends BaseIntegrationTest {
             .header("X-Internal-Key", "HGVklnjnwefebHVVjjnweklBJKbwkjbBHJhjbjhbwwf")
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsString(request)))
+        .andDo(print())
         .andExpect(status().isCreated())
         .andReturn()
         .getResponse()
@@ -280,7 +281,6 @@ class UserIntegrationTest extends BaseIntegrationTest {
   }
 
   @Test
-  @WithMockUser(roles = "ADMIN")
   void should_success_deleteUserInternal() throws Exception {
     User user = User.builder()
         .name("Vasya")
@@ -295,6 +295,7 @@ class UserIntegrationTest extends BaseIntegrationTest {
 
     mockMvc.perform(delete("/api/v1/users/internal/{id}", id)
         .header("X-Internal-Key", "HGVklnjnwefebHVVjjnweklBJKbwkjbBHJhjbjhbwwf"))
+        .andDo(print())
         .andExpect(status().isNoContent());
 
     boolean exists = userRepository.existsById(id);
