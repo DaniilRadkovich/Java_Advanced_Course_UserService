@@ -2,9 +2,7 @@ package com.innowise.userservice.config;
 
 import com.innowise.userservice.security.InternalKeyFilter;
 import com.innowise.userservice.security.JwtAuthenticationFilter;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -30,7 +28,9 @@ public class SecurityConfig {
     http.csrf(AbstractHttpConfigurer::disable)
         .authorizeHttpRequests(
             auth ->
-                auth.requestMatchers("/api/v1/auth/**")
+                auth.requestMatchers("/actuator/health", "/actuator/health/**", "/actuator/info")
+                    .permitAll()
+                    .requestMatchers("/api/v1/auth/**")
                     .permitAll()
                     .requestMatchers(HttpMethod.POST, "/api/v1/users/internal")
                     .hasRole("INTERNAL")
