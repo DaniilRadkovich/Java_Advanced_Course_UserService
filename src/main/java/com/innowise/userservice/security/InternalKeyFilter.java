@@ -9,6 +9,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -16,7 +17,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 @Component
 public class InternalKeyFilter extends OncePerRequestFilter {
 
-  @Value("${INTERNAL_KEY}")
+  @Value("${INTERNAL_KEY:HGVklnjnwefebHVVjjnweklBJKbwkjbBHJhjbjhbwwf}")
   private String internalKey;
 
   @Override
@@ -39,7 +40,7 @@ public class InternalKeyFilter extends OncePerRequestFilter {
         new UsernamePasswordAuthenticationToken(
             "internal-system", null, List.of(new SimpleGrantedAuthority("ROLE_INTERNAL")));
 
-    var context = SecurityContextHolder.createEmptyContext();
+    SecurityContext context = SecurityContextHolder.createEmptyContext();
     context.setAuthentication(authentication);
     SecurityContextHolder.setContext(context);
 

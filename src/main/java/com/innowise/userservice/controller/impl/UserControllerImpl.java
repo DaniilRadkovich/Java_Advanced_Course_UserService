@@ -98,9 +98,7 @@ public class UserControllerImpl implements UserController {
   @PostMapping("/internal")
   public ResponseEntity<UserDto> createUserInternal(@Valid @RequestBody UserCreateRequest request) {
     log.info("REQUEST = {}", request);
-    UserDto savedUser =
-        userService.createUser(
-            UserDto.builder()
+    UserDto savedUser = userService.createUser(UserDto.builder()
                 .name(request.getName())
                 .surname(request.getSurname())
                 .birthDate(request.getBirthDate())
